@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-toko
+  namespace: toko-lab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-toko
+  template:
+    metadata:
+      labels:
+        app: app-toko
+    spec:
+      containers:
+      - name: php-app
+        image: app-toko:latest
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: app-config
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-toko
+  namespace: toko-lab
+spec:
+  selector:
+    app: app-toko
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
