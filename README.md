@@ -51,7 +51,7 @@ k3s-deployment-training/
 **Skenario 2 (Multi-Container CRUD - 4 Container):**
 - **Minimum**: 2 vCPU, 4GB RAM
 - **Rekomendasi**: 2 vCPU, 4GB RAM
-- **Catatan**: Skenario 2 menjalankan MySQL + PHP App + Nginx Proxy, membutuhkan lebih banyak resource. 2GB RAM akan menyebabkan OOMKilled dan system crash.
+- **Catatan**: Skenario 2 menjalankan MySQL 8.0 + PHP App + Nginx Proxy. MySQL 8.0 membutuhkan minimal 512Mi memory. 2GB RAM akan menyebabkan OOMKilled dan system crash.
 
 ---
 
