@@ -39,9 +39,91 @@ k3s-deployment-training/
 
 ## Persyaratan
 - VMware Workstation / AWS EC2 dengan VM Ubuntu 24.04 LTS
-- RAM 2-4 GB
 - K3s Single-Node Cluster
 - Docker terinstall (hanya untuk OPSI 1 Skenario 1 dan Skenario 2)
+
+### ⚠️ PENTING: Spesifikasi Minimum VM/Instance
+
+**Skenario 1 (Landing Page - Single Container):**
+- **Minimum**: 2 vCPU, 2GB RAM
+- **Rekomendasi**: 2 vCPU, 2GB RAM
+
+**Skenario 2 (Multi-Container CRUD - 4 Container):**
+- **Minimum**: 2 vCPU, 4GB RAM
+- **Rekomendasi**: 2 vCPU, 4GB RAM
+- **Catatan**: Skenario 2 menjalankan MySQL + PHP App + Nginx Proxy, membutuhkan lebih banyak resource. 2GB RAM akan menyebabkan OOMKilled dan system crash.
+
+---
+
+## Setup VM/Instance
+
+### Opsi 1: VMware Workstation
+
+**Spesifikasi VM:**
+- OS: Ubuntu 24.04 LTS
+- CPU: 2 vCPU
+- RAM: 4GB (untuk Skenario 2) atau 2GB (untuk Skenario 1 saja)
+- Disk: 20GB
+- Network: NAT atau Bridged
+
+**Langkah Setup:**
+1. Download ISO Ubuntu 24.04 LTS dari https://ubuntu.com/download/desktop
+2. Buat VM baru di VMware Workstation dengan spesifikasi di atas
+3. Install Ubuntu 24.04 LTS
+4. Setelah install, update system:
+   ```bash
+   sudo apt update && sudo apt upgrade -y
+   ```
+5. Install Docker (jika diperlukan):
+   ```bash
+   sudo apt install -y docker.io
+   sudo systemctl start docker
+   sudo systemctl enable docker
+   sudo usermod -aG docker $USER
+   newgrp docker
+   ```
+
+### Opsi 2: AWS EC2
+
+**Spesifikasi Instance:**
+- **AMI**: Ubuntu Server 24.04 LTS (HVM), SSD Volume Type
+- **Instance Type**:
+  - Skenario 1: `t3.small` (2 vCPU, 2GB RAM)
+  - Skenario 2: `t3.medium` (2 vCPU, 4GB RAM) - **REKOMENDASI**
+- **Storage**: 20GB gp3
+- **Security Group**: Allow inbound TCP port 30080 (untuk akses aplikasi)
+
+**Langkah Setup:**
+1. Login ke AWS Console → EC2 → Launch Instance
+2. Pilih AMI: Ubuntu Server 24.04 LTS
+3. Pilih Instance Type:
+   - `t3.small` untuk Skenario 1 saja
+   - `t3.medium` untuk Skenario 2 (rekomendasi)
+4. Configure Instance:
+   - Network: Default VPC
+   - Subnet: Default subnet
+5. Add Storage: 20GB gp3
+6. Configure Security Group:
+   - Add rule: Type `Custom TCP`, Port `30080`, Source `0.0.0.0/0` (untuk akses aplikasi)
+   - Add rule: Type `SSH`, Port `22`, Source `Your IP` (untuk akses SSH)
+7. Key Pair: Create atau pilih existing key pair
+8. Launch Instance
+9. SSH ke instance:
+   ```bash
+   chmod 400 your-key.pem
+   ssh -i your-key.pem ubuntu@<public-ip>
+   ```
+10. Update system dan install Docker (jika diperlukan):
+    ```bash
+    sudo apt update && sudo apt upgrade -y
+    sudo apt install -y docker.io
+    sudo systemctl start docker
+    sudo systemctl enable docker
+    sudo usermod -aG docker $USER
+    newgrp docker
+    ```
+
+---
 
 ## Setup Awal K3s
 
