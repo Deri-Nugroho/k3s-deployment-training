@@ -179,17 +179,13 @@ Jika sudah mencoba semua opsi dan ingin bersih-bersih instance untuk lanjut ke S
 # Hapus semua deployment di namespace default
 kubectl delete deployment --all -n default
 kubectl delete service --all -n default
-
-# Hapus repository lokal
-cd ~
-rm -rf k3s-deployment-training
-
-# Hapus kubeconfig
-rm -rf ~/.kube
-
-# Uninstall K3s (opsional, jika ingin fresh install lagi)
-sudo /usr/local/bin/k3s-uninstall.sh
 ```
+
+**Catatan:**
+- Repository lokal dan kubeconfig TIDAK perlu dihapus
+- K3s TIDAK perlu di-uninstall
+- Skenario 2 menggunakan namespace berbeda (toko-lab) jadi tidak akan conflict
+- Ini menghemat waktu untuk user dengan koneksi internet terbatas
 
 **Setelah total cleanup, instance siap untuk Skenario 2!**
 

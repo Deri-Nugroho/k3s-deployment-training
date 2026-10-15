@@ -146,20 +146,12 @@ Skenario 1 memiliki **3 opsi deployment** yang bisa dipilih (lihat panduan lengk
 
 **Total Cleanup sebelum Skenario 2:**
 ```bash
-# Hapus semua deployment
+# Hapus semua deployment di namespace default
 kubectl delete deployment --all -n default
 kubectl delete service --all -n default
-
-# Hapus repository lokal
-cd ~
-rm -rf k3s-deployment-training
-
-# Hapus kubeconfig
-rm -rf ~/.kube
-
-# Uninstall K3s (opsional)
-sudo /usr/local/bin/k3s-uninstall.sh
 ```
+
+**Catatan:** Repository lokal, kubeconfig, dan K3s TIDAK perlu dihapus karena Skenario 2 menggunakan namespace berbeda (toko-lab) dan tidak akan conflict.
 
 ### Skenario 2: Multi-Container CRUD
 Lihat file [`skenario-2/PANDUAN_SKENARIO_2.md`](skenario-2/PANDUAN_SKENARIO_2.md) untuk panduan lengkap deployment microservices CRUD dengan 4 container.
