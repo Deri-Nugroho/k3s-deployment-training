@@ -75,6 +75,20 @@ sudo k3s ctr images import landing-page.tar
 kubectl apply -f k3s-manifest-local.yaml
 ```
 
+**Cleanup setelah mencoba OPSI 1:**
+```bash
+# Hapus deployment
+kubectl delete -f k3s-manifest-local.yaml
+
+# Hapus image lokal dari Docker
+docker rmi landing-page:latest
+
+# Hapus tar file
+rm -f landing-page.tar
+```
+
+---
+
 ### OPSI 2: Deploy dari k3s-manifest.yaml (Menggunakan Image Pre-built)
 **Tujuan**: Deploy cepat menggunakan image dari Docker Hub
 
@@ -82,6 +96,14 @@ kubectl apply -f k3s-manifest-local.yaml
 # Deploy langsung menggunakan image dari Docker Hub
 kubectl apply -f k3s-manifest.yaml
 ```
+
+**Cleanup setelah mencoba OPSI 2:**
+```bash
+# Hapus deployment
+kubectl delete -f k3s-manifest.yaml
+```
+
+---
 
 ### OPSI 3: Deploy via CI/CD GitHub Actions (Otomatis)
 **Tujuan**: Deploy otomatis saat push ke GitHub
@@ -98,6 +120,12 @@ kubectl apply -f k3s-manifest.yaml
 3. Deployment otomatis berjalan
 
 **File Workflow:** `.github/workflows/deploy-k3s.yaml`
+
+**Cleanup setelah mencoba OPSI 3:**
+```bash
+# Hapus deployment
+kubectl delete -f k3s-manifest.yaml
+```
 
 ---
 
@@ -128,6 +156,30 @@ kubectl logs deployment/nginx
 ```bash
 kubectl delete -f k3s-manifest.yaml
 ```
+
+---
+
+## 🧹 TOTAL CLEANUP (Sebelum lanjut ke Skenario 2)
+
+Jika sudah mencoba semua opsi dan ingin bersih-bersih instance untuk lanjut ke Skenario 2:
+
+```bash
+# Hapus semua deployment di namespace default
+kubectl delete deployment --all -n default
+kubectl delete service --all -n default
+
+# Hapus repository lokal
+cd ~
+rm -rf k3s-deployment-training
+
+# Hapus kubeconfig
+rm -rf ~/.kube
+
+# Uninstall K3s (opsional, jika ingin fresh install lagi)
+sudo /usr/local/bin/k3s-uninstall.sh
+```
+
+**Setelah total cleanup, instance siap untuk Skenario 2!**
 
 ---
 

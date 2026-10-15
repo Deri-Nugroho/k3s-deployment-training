@@ -77,6 +77,14 @@ kubectl version --client
 
 ### Skenario 1: Landing Page
 
+Skenario 1 memiliki **3 opsi deployment** yang bisa dipilih (lihat panduan lengkap di `skenario-1/PANDUAN_SKENARIO_1.md`):
+
+1. **OPSI 1: Manual Build dari Dockerfile** - Build image lokal, import ke K3s
+2. **OPSI 2: Deploy dari k3s-manifest.yaml** - Deploy cepat dengan image pre-built
+3. **OPSI 3: Deploy via CI/CD GitHub Actions** - Deploy otomatis
+
+**Contoh Deploy Cepat (OPSI 2):**
+
 1. **Clone Repository**
    ```bash
    git clone https://github.com/Deri-Nugroho/k3s-deployment-training.git
@@ -132,6 +140,26 @@ kubectl version --client
    deployment.apps "nginx" deleted from default namespace
    service "nginx" deleted from default namespace
    ```
+
+**Cleanup antar opsi deployment:**
+- Jika ingin mencoba opsi lain, lakukan cleanup terlebih dahulu sesuai panduan di `skenario-1/PANDUAN_SKENARIO_1.md`
+
+**Total Cleanup sebelum Skenario 2:**
+```bash
+# Hapus semua deployment
+kubectl delete deployment --all -n default
+kubectl delete service --all -n default
+
+# Hapus repository lokal
+cd ~
+rm -rf k3s-deployment-training
+
+# Hapus kubeconfig
+rm -rf ~/.kube
+
+# Uninstall K3s (opsional)
+sudo /usr/local/bin/k3s-uninstall.sh
+```
 
 ### Skenario 2: Multi-Container CRUD
 Lihat file [`skenario-2/PANDUAN_SKENARIO_2.md`](skenario-2/PANDUAN_SKENARIO_2.md) untuk panduan lengkap deployment microservices CRUD dengan 4 container.
