@@ -69,7 +69,18 @@ git clone https://github.com/Deri-Nugroho/k3s-deployment-training.git
 cd k3s-deployment-training/skenario-2
 ```
 
-### 5. Build Docker Images
+### 5. Install Docker (PENTING)
+Docker diperlukan untuk build images lokal sebelum import ke K3s:
+```bash
+sudo apt update
+sudo apt install -y docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+### 6. Build Docker Images
 ```bash
 # Build image untuk PHP App
 docker build -t app-toko:latest -f Dockerfile .
@@ -78,25 +89,25 @@ docker build -t app-toko:latest -f Dockerfile .
 docker build -t nginx-toko:latest -f nginx.Dockerfile .
 ```
 
-### 6. Verifikasi Images
+### 7. Verifikasi Images
 ```bash
 docker images | grep toko
 ```
 **Expected Output**: `app-toko` dan `nginx-toko` terdaftar
 
-### 7. Save Images ke Tar File
+### 8. Save Images ke Tar File
 ```bash
 docker save app-toko:latest -o app-toko.tar
 docker save nginx-toko:latest -o nginx-toko.tar
 ```
 
-### 8. Import Images ke K3s Containerd
+### 9. Import Images ke K3s Containerd
 ```bash
 sudo k3s ctr images import app-toko.tar
 sudo k3s ctr images import nginx-toko.tar
 ```
 
-### 9. Apply Kubernetes Manifests
+### 10. Apply Kubernetes Manifests
 ```bash
 # Namespace, Secret, dan ConfigMap
 kubectl apply -f k8s/00-namespace-secret.yaml
@@ -111,7 +122,7 @@ kubectl apply -f k8s/02-app-deployment.yaml
 kubectl apply -f k8s/03-nginx-proxy.yaml
 ```
 
-### 10. Verifikasi Deployment
+### 11. Verifikasi Deployment
 ```bash
 # Cek semua pod di namespace toko-lab
 kubectl get pods -n toko-lab
@@ -126,7 +137,7 @@ kubectl get ns
 - 3 pod: `mysql`, `app-toko` (2 replicas), `nginx-proxy`
 - 3 service: `mysql-service`, `app-toko`, `nginx-proxy`
 
-### 11. Cek Logs (jika ada error)
+### 12. Cek Logs (jika ada error)
 ```bash
 # Logs PHP App
 kubectl logs -n toko-lab deployment/app-toko
@@ -138,7 +149,7 @@ kubectl logs -n toko-lab deployment/mysql
 kubectl logs -n toko-lab deployment/nginx-proxy
 ```
 
-### 12. Akses Aplikasi CRUD
+### 13. Akses Aplikasi CRUD
 Buka browser dan akses:
 ```
 http://<IP-VM>:30080
@@ -148,7 +159,7 @@ http://<IP-VM>:30080
 - Username: `admin`
 - Password: `123`
 
-### 13. Uji Fitur CRUD
+### 14. Uji Fitur CRUD
 - **Dashboard**: Lihat statistik penjualan
 - **Data Barang**: Tambah barang baru (dengan upload foto)
 - **Kategori**: Tambah kategori baru
