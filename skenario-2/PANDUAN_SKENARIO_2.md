@@ -40,12 +40,36 @@
 
 ## ⏱️ LANGKAH-LANGKAH
 
-### 1. Pindah ke Folder Skenario 2
+### 1. Setup K3s (jika belum terinstall)
 ```bash
-cd ~/k3s-deployment-training/skenario-2
+curl -sfL https://get.k3s.io | sh -
 ```
 
-### 2. Build Docker Images
+### 2. Fix kubectl Permissions (PENTING)
+Setelah install K3s, kubectl biasanya tidak bisa diakses oleh user biasa:
+```bash
+mkdir -p ~/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+sudo chown $USER:$USER ~/.kube/config
+export KUBECONFIG=~/.kube/config
+echo 'export KUBECONFIG=~/.kube/config' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 3. Verifikasi K3s Running
+```bash
+sudo systemctl status k3s
+kubectl get nodes
+```
+**Expected Output**: Node status `Ready`
+
+### 4. Clone Repository
+```bash
+git clone https://github.com/Deri-Nugroho/k3s-deployment-training.git
+cd k3s-deployment-training/skenario-2
+```
+
+### 5. Build Docker Images
 ```bash
 # Build image untuk PHP App
 docker build -t app-toko:latest -f Dockerfile .
@@ -54,25 +78,25 @@ docker build -t app-toko:latest -f Dockerfile .
 docker build -t nginx-toko:latest -f nginx.Dockerfile .
 ```
 
-### 3. Verifikasi Images
+### 6. Verifikasi Images
 ```bash
 docker images | grep toko
 ```
 **Expected Output**: `app-toko` dan `nginx-toko` terdaftar
 
-### 4. Save Images ke Tar File
+### 7. Save Images ke Tar File
 ```bash
 docker save app-toko:latest -o app-toko.tar
 docker save nginx-toko:latest -o nginx-toko.tar
 ```
 
-### 5. Import Images ke K3s Containerd
+### 8. Import Images ke K3s Containerd
 ```bash
 sudo k3s ctr images import app-toko.tar
 sudo k3s ctr images import nginx-toko.tar
 ```
 
-### 6. Apply Kubernetes Manifests
+### 9. Apply Kubernetes Manifests
 ```bash
 # Namespace, Secret, dan ConfigMap
 kubectl apply -f k8s/00-namespace-secret.yaml
@@ -87,7 +111,7 @@ kubectl apply -f k8s/02-app-deployment.yaml
 kubectl apply -f k8s/03-nginx-proxy.yaml
 ```
 
-### 7. Verifikasi Deployment
+### 10. Verifikasi Deployment
 ```bash
 # Cek semua pod di namespace toko-lab
 kubectl get pods -n toko-lab
@@ -102,7 +126,7 @@ kubectl get ns
 - 3 pod: `mysql`, `app-toko` (2 replicas), `nginx-proxy`
 - 3 service: `mysql-service`, `app-toko`, `nginx-proxy`
 
-### 8. Cek Logs (jika ada error)
+### 11. Cek Logs (jika ada error)
 ```bash
 # Logs PHP App
 kubectl logs -n toko-lab deployment/app-toko
@@ -114,7 +138,7 @@ kubectl logs -n toko-lab deployment/mysql
 kubectl logs -n toko-lab deployment/nginx-proxy
 ```
 
-### 9. Akses Aplikasi CRUD
+### 12. Akses Aplikasi CRUD
 Buka browser dan akses:
 ```
 http://<IP-VM>:30080
@@ -124,7 +148,7 @@ http://<IP-VM>:30080
 - Username: `admin`
 - Password: `123`
 
-### 10. Uji Fitur CRUD
+### 13. Uji Fitur CRUD
 - **Dashboard**: Lihat statistik penjualan
 - **Data Barang**: Tambah barang baru (dengan upload foto)
 - **Kategori**: Tambah kategori baru
