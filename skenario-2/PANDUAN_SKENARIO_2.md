@@ -193,6 +193,24 @@ kubectl top pods -n toko-lab
 
 ## 🔧 TROUBLESHOOTING
 
+### Pod Status: Pending (FailedScheduling - untolerated taint)
+**Cause**: Node memiliki taint (disk-pressure, memory-pressure, dll) yang mencegah pod di-schedule
+**Solution**:
+```bash
+# Cek taint pada node
+kubectl describe node <node-name> | grep Taints
+
+# Cek disk usage
+df -h
+
+# Clean disk space
+docker system prune -a -f
+rm -f ~/k3s-deployment-training/skenario-2/*.tar
+
+# Remove taint disk-pressure (jika disk sudah cukup)
+kubectl taint nodes --all node.kubernetes.io/disk-pressure-
+```
+
 ### Pod Status: Evicted
 **Cause**: Pod di-kick karena kekurangan resource (memory/CPU)
 **Solution**:
