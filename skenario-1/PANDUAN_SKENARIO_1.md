@@ -25,29 +25,41 @@
 curl -sfL https://get.k3s.io | sh -
 ```
 
-### 2. Verifikasi K3s Running
+### 2. Fix kubectl Permissions (PENTING)
+Setelah install K3s, kubectl biasanya tidak bisa diakses oleh user biasa:
+```bash
+mkdir -p ~/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+sudo chown $USER:$USER ~/.kube/config
+export KUBECONFIG=~/.kube/config
+echo 'export KUBECONFIG=~/.kube/config' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 3. Verifikasi K3s Running
 ```bash
 sudo systemctl status k3s
 kubectl get nodes
 ```
 **Expected Output**: Node status `Ready`
 
-### 3. Cek K3s Version
+### 4. Cek K3s Version
 ```bash
-kubectl version --short
+kubectl version --client
 ```
 
-### 4. Pindah ke Folder Skenario 1
+### 5. Clone Repository
 ```bash
-cd ~/k3s-deployment-training/skenario-1
+git clone https://github.com/Deri-Nugroho/k3s-deployment-training.git
+cd k3s-deployment-training/skenario-1
 ```
 
-### 5. Deploy Landing Page
+### 6. Deploy Landing Page
 ```bash
 kubectl apply -f k3s-manifest.yaml
 ```
 
-### 6. Cek Pod & Service
+### 7. Cek Pod & Service
 ```bash
 kubectl get pods
 kubectl get svc
@@ -56,19 +68,19 @@ kubectl get svc
 - Pod: `nginx` status `Running`
 - Service: `nginx` type `NodePort` port `30080`
 
-### 7. Akses di Browser
+### 8. Akses di Browser
 Buka browser dan akses:
 ```
 http://<IP-VM>:30080
 ```
 **Expected**: Tampilan landing page HTML sederhana
 
-### 8. Cek Pod Logs (opsional)
+### 9. Cek Pod Logs (opsional)
 ```bash
 kubectl logs deployment/nginx
 ```
 
-### 9. Cleanup Skenario 1
+### 10. Cleanup Skenario 1
 ```bash
 kubectl delete -f k3s-manifest.yaml
 ```
