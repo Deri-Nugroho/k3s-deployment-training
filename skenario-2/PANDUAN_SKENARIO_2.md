@@ -193,12 +193,41 @@ kubectl top pods -n toko-lab
 
 ## 🔧 TROUBLESHOOTING
 
-### Pod Status: ImagePullBackOff / ErrImagePull
-**Cause**: Image belum di-import ke K3s
+### Pod Status: Evicted
+**Cause**: Pod di-kick karena kekurangan resource (memory/CPU)
 **Solution**:
 ```bash
-docker save app-toko:latest -o app-toko.tar
-sudo k3s ctr images import app-toko.tar
+# Cek resource usage node
+kubectl top nodes
+
+# Cek resource usage pod
+kubectl top pods -n toko-lab
+
+# Cleanup dan redeploy dengan resource limits yang sudah disesuaikan
+kubectl delete namespace toko-lab
+kubectl apply -f k8s/00-namespace-secret.yaml
+kubectl apply -f k8s/01-db-deployment.yaml
+kubectl apply -f k8s/02-app-deployment.yaml
+kubectl apply -f k8s/03-nginx-proxy.yaml
+```
+
+### Pod Status: ImagePullBackOff
+**Cause**: Image tidak bisa di-pull dari Docker Hub
+**Solution**:
+```bash
+kubectl describe pod <pod-name>
+```
+Pastikan koneksi internet aktif untuk pull image `mysql:8.0`
+
+### Pod Status: Error / CrashLoopBackOff
+**Cause**: Container gagal start atau crash
+**Solution**:
+```bash
+# Cek pod logs
+kubectl logs -n toko-lab <pod-name>
+
+# Cek pod events
+kubectl describe pod -n toko-lab <pod-name>
 ```
 
 ### Pod Status: CrashLoopBackOff
