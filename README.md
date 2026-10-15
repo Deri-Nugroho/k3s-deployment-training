@@ -9,14 +9,15 @@ k3s-deployment-training/
 ├── skenario-1/          # Landing Page Single Container
 │   ├── Dockerfile
 │   ├── index.html
-│   └── k3s-manifest.yaml
+│   ├── k3s-manifest.yaml
+│   └── PANDUAN_SKENARIO_1.md
 ├── skenario-2/          # Multi-Container CRUD (4 Container)
 │   ├── Dockerfile
 │   ├── nginx.Dockerfile
 │   ├── nginx.conf
 │   ├── config.php
 │   ├── deploy-local.sh
-│   ├── PANDUAN_LAB_2JP.md
+│   ├── PANDUAN_SKENARIO_2.md
 │   ├── k8s/
 │   │   ├── 00-namespace-secret.yaml
 │   │   ├── 01-db-deployment.yaml
@@ -42,8 +43,13 @@ k3s-deployment-training/
 - K3s Single-Node Cluster
 - Docker terinstall
 
-## Panduan Lengkap
-Lihat file `skenario-2/PANDUAN_LAB_2JP.md` untuk panduan praktikum lengkap dengan pembagian waktu 80 menit.
+## Panduan Praktikum
+
+### Skenario 1: Landing Page
+Lihat file [`skenario-1/PANDUAN_SKENARIO_1.md`](skenario-1/PANDUAN_SKENARIO_1.md) untuk panduan lengkap deployment landing page single container.
+
+### Skenario 2: Multi-Container CRUD
+Lihat file [`skenario-2/PANDUAN_SKENARIO_2.md`](skenario-2/PANDUAN_SKENARIO_2.md) untuk panduan lengkap deployment microservices CRUD dengan 4 container.
 
 ## Akses Aplikasi
 - Skenario 1: `http://<IP-VM>:30080`
