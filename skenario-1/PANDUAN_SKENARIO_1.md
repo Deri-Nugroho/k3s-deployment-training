@@ -54,12 +54,56 @@ git clone https://github.com/Deri-Nugroho/k3s-deployment-training.git
 cd k3s-deployment-training/skenario-1
 ```
 
-### 6. Deploy Landing Page
+---
+
+## 🎯 OPSI DEPLOYMENT (PILIH SALAH SATU)
+
+### OPSI 1: Manual Build dari Dockerfile (Untuk Pemula)
+**Tujuan**: Memahami cara build Docker image manual
+
 ```bash
+# Build image dari Dockerfile
+docker build -t landing-page:latest .
+
+# Save image ke tar
+docker save landing-page:latest -o landing-page.tar
+
+# Import ke K3s containerd
+sudo k3s ctr images import landing-page.tar
+
+# Deploy menggunakan manifest untuk image lokal
+kubectl apply -f k3s-manifest-local.yaml
+```
+
+### OPSI 2: Deploy dari k3s-manifest.yaml (Menggunakan Image Pre-built)
+**Tujuan**: Deploy cepat menggunakan image dari Docker Hub
+
+```bash
+# Deploy langsung menggunakan image dari Docker Hub
 kubectl apply -f k3s-manifest.yaml
 ```
 
-### 7. Cek Pod & Service
+### OPSI 3: Deploy via CI/CD GitHub Actions (Otomatis)
+**Tujuan**: Deploy otomatis saat push ke GitHub
+
+**Prasyarat:**
+- Setup K3s server dengan public IP
+- Setup KUBECONFIG di GitHub Secrets
+
+**Langkah:**
+1. Push code ke GitHub
+2. GitHub Actions akan otomatis:
+   - Checkout repository
+   - Apply manifest ke K3s cluster
+3. Deployment otomatis berjalan
+
+**File Workflow:** `.github/workflows/deploy-k3s.yaml`
+
+---
+
+## 🚀 LANJUTKAN DEPLOYMENT (Setelah pilih opsi di atas)
+
+### 6. Cek Pod & Service
 ```bash
 kubectl get pods
 kubectl get svc
@@ -68,19 +112,19 @@ kubectl get svc
 - Pod: `nginx` status `Running`
 - Service: `nginx` type `NodePort` port `30080`
 
-### 8. Akses di Browser
+### 7. Akses di Browser
 Buka browser dan akses:
 ```
 http://<IP-VM>:30080
 ```
 **Expected**: Tampilan landing page HTML sederhana
 
-### 9. Cek Pod Logs (opsional)
+### 8. Cek Pod Logs (opsional)
 ```bash
 kubectl logs deployment/nginx
 ```
 
-### 10. Cleanup Skenario 1
+### 9. Cleanup Skenario 1
 ```bash
 kubectl delete -f k3s-manifest.yaml
 ```
