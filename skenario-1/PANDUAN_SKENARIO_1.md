@@ -61,6 +61,18 @@ cd k3s-deployment-training/skenario-1
 ### OPSI 1: Manual Build dari Dockerfile (Untuk Pemula)
 **Tujuan**: Memahami cara build Docker image manual
 
+**Prasyarat: Install Docker terlebih dahulu**
+```bash
+sudo apt update
+sudo apt install -y docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+**Langkah Deployment:**
+
 ```bash
 # Build image dari Dockerfile
 docker build -t landing-page:latest .

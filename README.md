@@ -41,7 +41,7 @@ k3s-deployment-training/
 - VMware Workstation / AWS EC2 dengan VM Ubuntu 24.04 LTS
 - RAM 2-4 GB
 - K3s Single-Node Cluster
-- Docker terinstall
+- Docker terinstall (hanya untuk OPSI 1 Skenario 1 dan Skenario 2)
 
 ## Setup Awal K3s
 
