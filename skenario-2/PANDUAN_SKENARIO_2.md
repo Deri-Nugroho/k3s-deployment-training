@@ -229,6 +229,20 @@ kubectl apply -f k8s/02-app-deployment.yaml
 kubectl apply -f k8s/03-nginx-proxy.yaml
 ```
 
+### Pod Status: ErrImageNeverPull
+**Cause**: Image tidak ada di K3s containerd (mungkin terhapus oleh `docker system prune`)
+**Solution**:
+```bash
+# Rebuild dan re-import images
+cd ~/k3s-deployment-training/skenario-2
+docker build -t app-toko:latest -f Dockerfile .
+docker build -t nginx-toko:latest -f nginx.Dockerfile .
+docker save app-toko:latest -o app-toko.tar
+docker save nginx-toko:latest -o nginx-toko.tar
+sudo k3s ctr images import app-toko.tar
+sudo k3s ctr images import nginx-toko.tar
+```
+
 ### Pod Status: ImagePullBackOff
 **Cause**: Image tidak bisa di-pull dari Docker Hub
 **Solution**:
